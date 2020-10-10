@@ -1,6 +1,6 @@
 {
   "name": "solidity-pegjs-parser",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "solidity-pegjs-parser",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,13 @@
   "bin": {
     "solidity-parser": "cli.js"
   },
-  "keywords": [ "solidity", "ethereum", "pegjs", "parser", "smart contracts"],
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "pegjs",
+    "parser",
+    "smart contracts"
+  ],
   "author": "SEE CONTRIBUTORS",
   "license": "ISC",
   "dependencies": {
