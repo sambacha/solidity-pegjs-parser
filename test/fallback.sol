@@ -1,4 +1,6 @@
 contract Contract {
-  function() {
+    uint public fallback;
+  function set(uint x) public {
+    fallback = x;
   }
 }

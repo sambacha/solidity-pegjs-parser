@@ -4,7 +4,7 @@
   "description": "solidity-pegjs-parser",
   "main": "index.js",
   "scripts": {
-    "build": "mkdirp ./build && pegjs -o ./build/parser.js ./lib/solidity.pegjs && pegjs -o ./build/imports_parser.js ./lib/imports.pegjs",
+    "build": "mkdirp ./build && pegjs -o ./build/parser.js ./solidity.pegjs && pegjs -o ./build/imports_parser.js ./imports.pegjs",
     "lint": "eslint .",
     "prepublish": "npm run build",
     "test": "mocha --timeout 5000 --reporter spec"
