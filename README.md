@@ -1,6 +1,6 @@
 # Solidity PEGJS Grammar Parser 
 
-> npm solidity-pegjs-parser
+> [npm solidity-pegjs-parser](https://www.npmjs.com/package/solidity-pegjs-parser)
 
 ## Abstract
 
