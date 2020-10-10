@@ -11,7 +11,7 @@ var builtParsers = {
 module.exports = {
   getParser: function (parser_name, rebuild) {
     if (rebuild == true) {
-      var parserfile = fs.readFileSync(path.resolve("./" + parser_name + ".pegjs"), { encoding: "utf8" })
+      var parserfile = fs.readFileSync(path.resolve("./lib" + parser_name + ".pegjs"), { encoding: "utf8" })
       return PEG.generate(parserfile)
     } else {
       return builtParsers[parser_name]
