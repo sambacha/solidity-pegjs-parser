@@ -3,10 +3,14 @@
   "version": "2.0.0",
   "description": "solidity-pegjs-parser",
   "main": "index.js",
+  "repository": {
+  "type" : "git",
+  "url" : "https://github.com/sambacha/solidity-pegjs-parser"
+},
   "scripts": {
     "build": "mkdirp ./build && pegjs -o ./build/parser.js ./solidity.pegjs && pegjs -o ./build/imports_parser.js ./imports.pegjs",
     "lint": "eslint .",
-    "prepublish": "npm run build",
+    "run": "npm run build",
     "test": "mocha --timeout 5000 --reporter spec"
   },
   "bin": {
