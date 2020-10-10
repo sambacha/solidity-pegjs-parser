@@ -4,11 +4,10 @@
 
 ## Abstract
 
-This takes `solidity-parser-sc` (npm package) and updates it and also provides a GitHub repository, as there is no repository listed under NPM.
-
+This takes `solidity-parser-sc` (npm package) and updates it and also provides a GitHub repository, as there is no repository 
+listed under NPM. Nor is it actually maintained.
 
 ## Overview
-
 
 > original [consensys/solidity-parser](https://github.com/ConsenSys/solidity-parser) with additional project specific grammar rules
 
@@ -32,4 +31,4 @@ For code analysis of processing systems that pre-processing to deploy or run the
 
 ### License
 
-ISC
+ISC / MIT
