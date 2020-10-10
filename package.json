@@ -1,0 +1,26 @@
+{
+  "name": "solidity-pegjs-parser",
+  "version": "1.1.0",
+  "description": "solidity-pegjs-parser",
+  "main": "index.js",
+  "scripts": {
+    "build": "mkdirp ./build && pegjs -o ./build/parser.js ./lib/solidity.pegjs && pegjs -o ./build/imports_parser.js ./imports.pegjs",
+    "lint": "eslint .",
+    "prepublish": "npm run build",
+    "test": "mocha --timeout 5000 --reporter spec"
+  },
+  "bin": {
+    "solidity-parser": "cli.js"
+  },
+  "keywords": [ "solidity", "ethereum", "pegjs", "parser", "smart contracts"],
+  "author": "SEE CONTRIBUTORS",
+  "license": "ISC",
+  "dependencies": {
+    "mkdirp": "^1.0.4"
+  },
+  "devDependencies": {
+    "mocha": "^8.1.3",
+    "pegjs": "^0.10.0",
+    "yargs": "^16.0.3"
+  }
+}
