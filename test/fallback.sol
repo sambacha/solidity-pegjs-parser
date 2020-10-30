@@ -1,6 +1,6 @@
 contract Contract {
     uint public fallback;
-  function set(uint x) public {gi
-    fallback = x;
+  function set(uint x) public {
+   if  fallback = x;
   }
 }
