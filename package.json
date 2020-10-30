@@ -21,7 +21,7 @@
     "mocha": "^8.2.0"
   },
   "scripts": {
-    "build": "mkdirp ./build && pegjs -o ./build/parser.js ./solidity.pegjs && pegjs -o ./build/imports_parser.js ./imports.pegjs",
+    "build": "mkdirp ./build && ./node_modules/pegjs/bin/pegjs -o ./build/parser.js ./solidity.pegjs && pegjs -o ./build/imports_parser.js ./imports.pegjs",
     "lint": "eslint .",
     "run": "npm run build",
     "test": "mocha --timeout 5000 --reporter spec"
