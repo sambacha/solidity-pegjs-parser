@@ -2,20 +2,101 @@
 
 > [npm solidity-pegjs-parser](https://www.npmjs.com/package/solidity-pegjs-parser)
 
+
 ## Abstract
 
-This takes `solidity-parser-sc` (npm package) and updates it and also provides a GitHub repository, as there is no repository 
-listed under NPM. Nor is it actually maintained.
+`$ npm install pegis-solidity`
+
+Ideal for AST use-cases
 
 ## Overview
 
 > original [consensys/solidity-parser](https://github.com/ConsenSys/solidity-parser) with additional project specific grammar rules
 
-For code analysis of processing systems that pre-processing to deploy or run their tests.
+### Usage
+
+```js
+import { solidityparser } from 'pegis-solidity';
+```
+### command line 
+
+
+`$ ./node_modules/.boin/pegis-solidity $PWD/file_name.js`
+
+#### Example
+
+Consider this solidity code as input:
+
+```solidity
+import "Foo.sol";
+
+contract MyContract {
+  mapping (uint => address) public addresses;
+}
+```
+Generated output as AST output:
+
+```json
+{
+  "type": "Program",
+  "body": [
+    {
+      "type": "ImportStatement",
+      "value": "Foo.sol"
+    },
+    {
+      "type": "ContractStatement",
+      "name": "MyContract",
+      "is": [],
+      "body": [
+        {
+          "type": "ExpressionStatement",
+          "expression": {
+            "type": "DeclarativeExpression",
+            "name": "addresses",
+            "literal": {
+              "type": "Type",
+              "literal": {
+                "type": "MappingExpression",
+                "from": {
+                  "type": "Type",
+                  "literal": "uint",
+                  "members": [],
+                  "array_parts": []
+                },
+                "to": {
+                  "type": "Type",
+                  "literal": "address",
+                  "members": [],
+                  "array_parts": []
+                }
+              },
+              "members": [],
+              "array_parts": []
+            },
+            "is_constant": false,
+            "is_public": true
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+```js
+var SolidityParser = require("pegis-solidity");
+
+// Parse Solidity code as a string:
+var result = SolidityParser.parse("contract { ... }");
+
+// Or, parse a file:
+var result = SolidityParser.parseFile("./path/to/file.sol");
+```
 
 ## Updates to Grammar 
 
-> A full list can be found under the `DIFF.md` document [here](/DIFF.md)
+> A full list can be found under the `DIFF.md` document [here](/docs/DIFF.md)
 ```diff
  HexStringLiteral
 -  = HexToken StringLiteral
