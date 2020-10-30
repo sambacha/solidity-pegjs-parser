@@ -1,36 +1,40 @@
 {
-  "name": "solidity-pegjs-parser",
-  "version": "2.0.2",
-  "description": "solidity-pegjs-parser",
+  "name": "pegis-solidity",
+  "version": "1.0.0",
+  "description": "> [npm solidity-pegjs-parser](https://www.npmjs.com/package/solidity-pegjs-parser)",
   "main": "index.js",
-  "repository": {
-  "type" : "git",
-  "url" : "https://github.com/sambacha/solidity-pegjs-parser"
-},
+  "bin": {
+    "pegis-solidity": "cli.js"
+  },
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {
+    "mocha": "^8.2.0",
+    "pegjs": "^0.10.0",
+    "yargs": "^16.1.0",
+        "mkdirp": "^1.0.4"
+  },
+  "devDependencies": {
+    "mocha": "^8.2.0"
+  },
   "scripts": {
     "build": "mkdirp ./build && pegjs -o ./build/parser.js ./solidity.pegjs && pegjs -o ./build/imports_parser.js ./imports.pegjs",
     "lint": "eslint .",
     "run": "npm run build",
     "test": "mocha --timeout 5000 --reporter spec"
   },
-  "bin": {
-    "solidity-pegjs-parser": "bin/cli.js"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sambacha/solidity-pegjs-parser.git"
   },
-  "keywords": [
-    "solidity",
-    "ethereum",
-    "pegjs",
-    "parser",
-    "smart contracts"
-  ],
+  "keywords": [],
   "author": "SEE CONTRIBUTORS",
   "license": "ISC",
-  "dependencies": {
-    "mkdirp": "^1.0.4"
+  "bugs": {
+    "url": "https://github.com/sambacha/solidity-pegjs-parser/issues"
   },
-  "devDependencies": {
-    "mocha": "^8.2.0",
-    "pegjs": "^0.10.0",
-    "yargs": "^16.1.0"
-  }
+  "homepage": "https://github.com/sambacha/solidity-pegjs-parser#readme"
 }
