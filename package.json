@@ -1,6 +1,6 @@
 {
   "name": "pegis-solidity",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "pegjs grammar for solidity parsing",
   "main": "index.js",
   "bin": {
