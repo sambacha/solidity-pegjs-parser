@@ -1,5 +1,9 @@
 # Solidity PEGJS Grammar Parser 
 
+![nodejs](https://github.com/sambacha/solidity-pegjs-parser/workflows/nodejs/badge.svg)
+
+> [GitHub Source](https://github.com/sambacha/solidity-pegjs-parser)
+
 > [npm solidity-pegjs-parser](https://www.npmjs.com/package/solidity-pegjs-parser)
 
 
@@ -11,6 +15,8 @@ Ideal for AST use-cases
 
 ## Overview
 
+pegis-solidity
+
 > original [consensys/solidity-parser](https://github.com/ConsenSys/solidity-parser) with additional project specific grammar rules
 
 ### Usage
@@ -19,7 +25,6 @@ Ideal for AST use-cases
 import { solidityparser } from 'pegis-solidity';
 ```
 ### command line 
-
 
 `$ ./node_modules/.boin/pegis-solidity $PWD/file_name.js`
 
