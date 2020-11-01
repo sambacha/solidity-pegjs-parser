@@ -1,13 +1,13 @@
-"use strict";
+"use strict"
 
-const target = require( "@pegjs/bundler/target" );
-const { VERSION } = require( "pegjs" );
+const target = require("@pegjs/bundler/target")
+const { VERSION } = require("pegjs")
 
-const entry = require.resolve( "pegjs" );
+const entry = require.resolve("pegjs")
 const banner = `
 
     /**
-     * PEG.js v${ VERSION }, [hash]
+     * PEG.js v${VERSION}, [hash]
      * https://pegjs.org/
      *
      * Copyright (c) 2010-2016 David Majda
@@ -18,29 +18,23 @@ const banner = `
 
     /* eslint-disable */
 
-`;
-const library = "peg";
+`
+const library = "peg"
 
 module.exports = [
+  /* https://unpkg.com/pegjs@latest/dist/peg.js */
+  target({
+    banner,
+    entry,
+    library,
+    output: "packages/pegjs/dist/peg.js",
+  }),
 
-    /* https://unpkg.com/pegjs@latest/dist/peg.js */
-    target( {
-
-        banner,
-        entry,
-        library,
-        output: "packages/pegjs/dist/peg.js",
-
-    } ),
-
-    /* https://unpkg.com/pegjs@latest/dist/peg.min.js */
-    target( {
-
-        banner,
-        entry,
-        library,
-        output: "packages/pegjs/dist/peg.min.js",
-
-    } ),
-
-];
+  /* https://unpkg.com/pegjs@latest/dist/peg.min.js */
+  target({
+    banner,
+    entry,
+    library,
+    output: "packages/pegjs/dist/peg.min.js",
+  }),
+]

@@ -30,7 +30,16 @@
     "type": "git",
     "url": "git+https://github.com/sambacha/solidity-pegjs-parser.git"
   },
-  "keywords": [ "soliditty", "pegjs", "parser", "ethereum", "ast", "instrument", "testing", "coverage"],
+  "keywords": [
+    "soliditty",
+    "pegjs",
+    "parser",
+    "ethereum",
+    "ast",
+    "instrument",
+    "testing",
+    "coverage"
+  ],
   "author": "SEE CONTRIBUTORS",
   "license": "ISC",
   "bugs": {

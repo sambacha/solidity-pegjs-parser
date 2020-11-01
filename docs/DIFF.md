@@ -1,8 +1,8 @@
 # Solidity Parser Diff
 
-> Changes in updated Grammar 
+> Changes in updated Grammar
 
-``` diff
+```diff
 --- archive/solidity.pegjs	2020-10-10 03:17:33.684241381 -0700
 +++ lib/solidity.pegjs	2020-10-10 03:32:25.243833686 -0700
 @@ -37,7 +37,7 @@
@@ -12,7 +12,7 @@
 -    MemberExpression: "object",
 +    MemberExpression: "object"
    };
- 
+
    function filledArray(count, value) {
 @@ -85,8 +85,8 @@
          operator: element[1],
@@ -28,7 +28,7 @@
 @@ -171,9 +171,6 @@
        };
      }
- 
+
 -Interpolation
 -  = "{{" __ name:IdentifierName __ "}}" { return name; }
 -
@@ -38,7 +38,7 @@
 @@ -183,6 +180,16 @@
    = IdentifierStart
    / UnicodeDigit
- 
+
 +AddressPayable
 +  = "address" __  PayableToken {
 +      return {
@@ -53,7 +53,7 @@
    = Lu
    / Ll
 @@ -208,7 +215,6 @@
- 
+
  Keyword
    = BreakToken
 -  / ConstructorToken
@@ -63,7 +63,7 @@
 @@ -229,11 +235,6 @@
    / VarToken
    / WhileToken
- 
+
 -FutureReservedWord
 -  = ClassToken
 -  / ExportToken
@@ -74,7 +74,7 @@
    / DenominationLiteral
 @@ -332,7 +333,14 @@
      }
- 
+
  HexStringLiteral
 -  = HexToken StringLiteral
 +  = HexToken val:StringLiteral {
@@ -85,12 +85,12 @@
 +      end: location().end.offset
 +    };
 +  }
- 
+
  DoubleStringCharacter
    = !('"' / "\\" / LineTerminator) SourceCharacter { return text(); }
 @@ -388,11 +396,25 @@
      }
- 
+
  VersionLiteral
 -  = operator:(RelationalOperator / EqualityOperator / BitwiseXOROperator)? __ ("v")? major:DecimalIntegerLiteral "." minor:DecimalIntegerLiteral "." patch:DecimalIntegerLiteral {
 +  = operator:(RelationalOperator / EqualityOperator / BitwiseXOROperator / Tilde)? __ ("v")? major:DecimalIntegerLiteral minor:("." DecimalIntegerLiteral)? patch:("." DecimalIntegerLiteral)? {
@@ -115,11 +115,11 @@
 +      end: location().end.offset
      };
    }
- 
+
 @@ -456,26 +478,27 @@
- 
+
  /* Tokens */
- 
+
 +EmitToken       = "emit"       !IdentifierPart
 +ExperimentalToken      = "experimental"      !IdentifierPart
 +ExternalToken   = "external"   !IdentifierPart
@@ -166,7 +166,7 @@
 +
 +      return expression;
 +    }
- 
+
  ArrayLiteral
    = "[" __ elision:(Elision __)? "]" {
 @@ -594,12 +626,23 @@
@@ -198,7 +198,7 @@
 @@ -657,6 +700,12 @@
        return buildTree(head, tail, function(result, element) {
          element[TYPES_TO_PROPERTY_NAMES[element.type]] = result;
- 
+
 +        // Fix the start position of all nodes (ORIGIN: https://github.com/duaraghav8/Solium/issues/104)
 +        // The MemberExpression node's start property doesnt cover the entire previous code
 +        // eg - "ab.cd()[10]" the node.start points to '[' instead of 'a'
@@ -215,7 +215,7 @@
 -  / "(" __ args:Interpolation __ ")" {
 -      return [args];
 -    }
- 
+
  ArgumentList
    = head:AssignmentExpression tail:(__ "," __ AssignmentExpression)* {
 @@ -697,10 +743,9 @@
@@ -223,7 +223,7 @@
    / CallExpression
    / NewExpression
 -  / Interpolation
- 
+
  Type
 -  = literal:(Mapping / Identifier / FunctionToken __ FunctionName __ ModifierArgumentList? __ ReturnsDeclaration? __ IdentifierName?) members:("." Identifier)* parts:(__"[" __ (Expression)? __ "]")*
 +  = literal:(Mapping / AddressPayable / Identifier) members:("." Identifier)* parts:(__"[" __ (Expression)? __ "]")*
@@ -271,7 +271,7 @@
 +        end: location().end.offset
 +      };
 +    }
- 
+
  VisibilitySpecifier
    = PublicToken
 @@ -720,12 +802,13 @@
@@ -279,51 +279,51 @@
    = StorageToken
    / MemoryToken
 +  / CalldataToken
- 
+
  StateVariableSpecifiers
    = specifiers:(VisibilitySpecifier __ ConstantToken?){
      return {
        visibility: specifiers[0][0],
 -      isconstant: specifiers[2] ? true: false
-+      isconstant: specifiers[2] ? true: false 
++      isconstant: specifiers[2] ? true: false
      }
    }
    / specifiers:(ConstantToken __ VisibilitySpecifier?){
 @@ -735,13 +818,13 @@
      }
    }
- 
+
 -StateVariableValue
-+StateVariableValue 
++StateVariableValue
    = "=" __ expression:Expression {
      return expression;
    }
- 
+
  StateVariableDeclaration
 -  = type:Type __ specifiers:StateVariableSpecifiers? __ id:Identifier __ value:StateVariableValue? __ EOS
-+  = type:Type __ specifiers:StateVariableSpecifiers? __ id:Identifier __ value:StateVariableValue? __ EOS  
++  = type:Type __ specifiers:StateVariableSpecifiers? __ id:Identifier __ value:StateVariableValue? __ EOS
    {
      return {
        type: "StateVariableDeclaration",
 @@ -756,12 +839,12 @@
    }
- 
+
  DeclarativeExpression
 -  = type:Type __ storage:StorageLocationSpecifier? __ id:Identifier
-+  = type:Type __ storage:StorageLocationSpecifier? __ id:Identifier 
++  = type:Type __ storage:StorageLocationSpecifier? __ id:Identifier
    {
      return {
        type: "DeclarativeExpression",
        name: id.name,
 -      literal: type,
-+      literal: type, 
++      literal: type,
        storage_location: storage ? storage[0]: null,
        start: location().start.offset,
        end: location().end.offset
 @@ -872,6 +955,9 @@
    = "=="
    / "!="
- 
+
 +Tilde
 +  = "~"
 +
@@ -332,7 +332,7 @@
      tail:(__ BitwiseANDOperator __ EqualityExpression)*
 @@ -970,10 +1056,26 @@
    / "|="
- 
+
  Expression
 -  = Comma * __ head:AssignmentExpression tail:(Comma+ AssignmentExpression)* __ Comma* {
 -      return tail.length > 0
@@ -359,7 +359,7 @@
 +        end: location().end.offset
 +      };
      }
- 
+
  /* ----- A.4 Statements ----- */
 @@ -986,10 +1088,9 @@
  Statement
@@ -378,13 +378,13 @@
    / ThrowStatement
    / UsingStatement
 +  / EmitStatement
- 
+
  Block
    = "{" __ body:(StatementList __)? "}" {
 @@ -1050,6 +1152,7 @@
        };
      }
- 
+
 +
  VariableDeclarationList
    = head:VariableDeclaration tail:(__ "," __ VariableDeclaration)* {
@@ -392,7 +392,7 @@
 @@ -1069,21 +1172,11 @@
  Initialiser
    = "=" !"=" __ expression:AssignmentExpression { return expression; }
- 
+
 -EmitStatement
 -  = EmitToken __ expression:CallExpression __ EOS {
 -    return {
@@ -405,7 +405,7 @@
 -
  EmptyStatement
    = ";" { return { type: "EmptyStatement", start: location().start.offset, end: location().end.offset }; }
- 
+
  ExpressionStatement
 -  = !("{" / FunctionToken / ContractToken / InterfaceToken / LibraryToken / StructToken / EnumToken) expression:Expression EOS {
 +  = !("{" / ContractToken / InterfaceToken / LibraryToken / StructToken / EnumToken) expression:Expression EOS {
@@ -458,7 +458,7 @@
 @@ -1207,6 +1286,17 @@
      }
    }
- 
+
 +EmitStatement
 +  = EmitToken __ callexpr:CallExpression EOS
 +  {
@@ -476,7 +476,7 @@
 @@ -1224,6 +1314,18 @@
      };
    }
- 
+
 +GlobalSymbol
 +  = name:"*" __ alias:(AsToken __ Identifier)
 +  {
@@ -505,7 +505,7 @@
          update: extractOptional(update, 0),
 @@ -1283,7 +1387,7 @@
    }
- 
+
  PlaceholderStatement
 -  = "_" __ EOS {
 +  = "_" (__ EOS)? {
@@ -541,7 +541,7 @@
      }
 @@ -1404,25 +1508,11 @@
      }
- 
+
  FunctionDeclaration
 -  = FunctionToken __ fnname:FunctionName __ args:ModifierArgumentList? __ returns:ReturnsDeclaration? __ body:FunctionBody
 -    {
@@ -604,14 +604,14 @@
          end: location().end.offset
        };
      }
- 
+
 -
  ReturnsDeclaration
    = ReturnsToken __ params:("(" __ InformalParameterList __ ")")
    {
      return params != null ? params [2] : null;
    }
- 
+
 +ReturnsDeclarations
 +  = returnParams:ReturnsDeclaration?
 +  {
@@ -626,13 +626,13 @@
 +      end: location().end.offset
 +    };
 +  }
-+    
- 
++
+
  FunctionName
    = id:Identifier? __ params:("(" __ InformalParameterList? __ ")")
 @@ -1494,12 +1597,18 @@
    }
- 
+
  ModifierArgument
 -  = id:Identifier __ params:("(" __ ArgumentList? __ ")")?
 +  = id:Identifier params:(__ "(" __ ArgumentList? __ ")")?
@@ -654,7 +654,7 @@
 @@ -1520,22 +1629,40 @@
        return buildList(head, tail, 1);
      }
- 
+
 +FunctionTypeModifierList
 +  = head:FunctionTypeModifier tail:( __ FunctionTypeModifier)* {
 +      return buildList(head, tail, 1);
@@ -679,7 +679,7 @@
 +  = head:ModifierNameWithAlias tail:( __ "," __ ModifierNameWithAlias)* {
        return buildList(head, tail, 3);
      }
- 
+
  InformalParameter
 -  = type:Type __ isindexed:IndexedToken? __ isconstant:ConstantToken? __ isstorage:StorageToken? __ ismemory:MemoryToken? __ id:Identifier?
 +  = type:Type __ isindexed:IndexedToken? __ isconstant:ConstantToken? __ storage:StorageLocationSpecifier? __ id:Identifier?
@@ -700,7 +700,7 @@
      };
 @@ -1582,7 +1709,7 @@
    }
- 
+
  DeclarativeExpressionList
 -  = head:(DeclarativeExpression __ EOS / FunctionDeclaration __) tail:( __ DeclarativeExpression __ EOS / __ FunctionDeclaration )*
 +  = head:DeclarativeExpression __ EOS tail:( __ DeclarativeExpression __ EOS )*
@@ -713,7 +713,7 @@
    / FunctionDeclaration
 +  / ConstructorDeclaration
    / UsingStatement
- 
+
  InlineAssemblyBlock
 @@ -1641,19 +1769,16 @@
  AssemblyItem
@@ -736,13 +736,13 @@
    / StringLiteral
    / HexStringLiteral
 +  / Identifier
- 
+
  AssemblyExpression
    = FunctionalAssemblyInstruction
 @@ -1664,53 +1789,50 @@
    / StringLiteral
    / Identifier
- 
+
 -AssemblyLocalBinding
 -  = 'let' __ name:Identifier __ ':=' __ expression:AssemblyExpression {
 +AssemblyIdentifierList
@@ -765,7 +765,7 @@
        end: location().end.offset
      }
    }
- 
+
 -AssemblyAssignment
 -  = name:Identifier __ ':=' __ expression:AssemblyExpression {
 +AssemblyLocalBinding
@@ -797,7 +797,7 @@
        end: location().end.offset
      }
    }
- 
+
 -AssemblyIdentifierList
 -  = Identifier ( ',' Identifier )*
 -

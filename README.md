@@ -1,11 +1,10 @@
-# Solidity PEGJS Grammar Parser 
+# Solidity PEGJS Grammar Parser
 
 ![nodejs](https://github.com/sambacha/solidity-pegjs-parser/workflows/nodejs/badge.svg)
 
 > [GitHub Source](https://github.com/sambacha/solidity-pegjs-parser)
 
 > [npm solidity-pegjs-parser](https://www.npmjs.com/package/solidity-pegjs-parser)
-
 
 ## Abstract
 
@@ -22,9 +21,10 @@ pegis-solidity
 ### Usage
 
 ```js
-import { solidityparser } from 'pegis-solidity';
+import { solidityparser } from "pegis-solidity"
 ```
-### command line 
+
+### command line
 
 `$ ./node_modules/.boin/pegis-solidity $PWD/file_name.js`
 
@@ -39,6 +39,7 @@ contract MyContract {
   mapping (uint => address) public addresses;
 }
 ```
+
 Generated output as AST output:
 
 ```json
@@ -90,18 +91,19 @@ Generated output as AST output:
 ```
 
 ```js
-var SolidityParser = require("pegis-solidity");
+var SolidityParser = require("pegis-solidity")
 
 // Parse Solidity code as a string:
-var result = SolidityParser.parse("contract { ... }");
+var result = SolidityParser.parse("contract { ... }")
 
 // Or, parse a file:
-var result = SolidityParser.parseFile("./path/to/file.sol");
+var result = SolidityParser.parseFile("./path/to/file.sol")
 ```
 
-## Updates to Grammar 
+## Updates to Grammar
 
 > A full list can be found under the `DIFF.md` document [here](/docs/DIFF.md)
+
 ```diff
  HexStringLiteral
 -  = HexToken StringLiteral
