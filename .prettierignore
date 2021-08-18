@@ -13,3 +13,5 @@ codecov/
 *.xhtml
 peggy/
 *.peg
+.nyc*
+lib/solidity-pegis.js
