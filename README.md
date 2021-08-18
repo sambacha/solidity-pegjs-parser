@@ -16,12 +16,14 @@ Ideal for AST use-cases
 
 pegis-solidity
 
-> original [consensys/solidity-parser](https://github.com/ConsenSys/solidity-parser) with additional project specific grammar rules
+> original
+> [consensys/solidity-parser](https://github.com/ConsenSys/solidity-parser) with
+> additional project specific grammar rules
 
 ### Usage
 
 ```js
-import { solidityparser } from "pegis-solidity"
+import { solidityparser } from 'pegis-solidity';
 ```
 
 ### command line
@@ -91,13 +93,13 @@ Generated output as AST output:
 ```
 
 ```js
-var SolidityParser = require("pegis-solidity")
+var SolidityParser = require('pegis-solidity');
 
 // Parse Solidity code as a string:
-var result = SolidityParser.parse("contract { ... }")
+var result = SolidityParser.parse('contract { ... }');
 
 // Or, parse a file:
-var result = SolidityParser.parseFile("./path/to/file.sol")
+var result = SolidityParser.parseFile('./path/to/file.sol');
 ```
 
 ## Updates to Grammar

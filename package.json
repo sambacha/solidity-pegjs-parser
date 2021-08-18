@@ -30,6 +30,7 @@
     "build": "sh entrypoint.sh",
     "ci": "rm -rf build/ && sh entrypoint.sh && npx nyc --reporter=lcov npm test && npx codecov",
     "lint": "npx eslint .",
+    "format": "npx prettier --config .prettierrc.json --write .",
     "run": "npm run build",
     "test": "npx mocha --timeout 5000 --reporter spec"
   },
