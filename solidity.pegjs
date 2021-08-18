@@ -40,6 +40,11 @@
     MemberExpression: "object"
   };
 
+  String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+  };
+
   function filledArray(count, value) {
     var result = new Array(count), i;
 
@@ -234,7 +239,10 @@ Keyword
   / ThrowToken
   / VarToken
   / WhileToken
-
+  / TryToken
+  / CatchToken
+  / EmitToken
+  
 Literal
   = BooleanLiteral
   / DenominationLiteral
@@ -288,13 +296,13 @@ DenominationLiteral
 
 DecimalLiteral
   = DecimalIntegerLiteral "." DecimalDigit* ExponentPart? {
-      return { type: "Literal", value: parseFloat(text()), start: location().start.offset, end: location().end.offset };
+      return { type: "Literal", value: parseFloat(text().replaceAll('_', '')), start: location().start.offset, end: location().end.offset };
     }
   / "." DecimalDigit+ ExponentPart? {
-      return { type: "Literal", value: parseFloat(text()), start: location().start.offset, end: location().end.offset };
+      return { type: "Literal", value: parseFloat(text().replaceAll('_', '')), start: location().start.offset, end: location().end.offset };
     }
   / DecimalIntegerLiteral ExponentPart? {
-      return { type: "Literal", value: parseFloat(text()), start: location().start.offset, end: location().end.offset };
+      return { type: "Literal", value: parseFloat(text().replaceAll('_', '')), start: location().start.offset, end: location().end.offset };
     }
 
 DecimalIntegerLiteral
@@ -302,7 +310,7 @@ DecimalIntegerLiteral
   / NonZeroDigit DecimalDigit*
 
 DecimalDigit
-  = [0-9]
+  = [0-9_]
 
 NonZeroDigit
   = [1-9]
@@ -396,7 +404,7 @@ UnicodeEscapeSequence
     }
 
 VersionLiteral
-  = operator:(RelationalOperator / EqualityOperator / BitwiseXOROperator / Tilde)? __ ("v")? major:DecimalIntegerLiteral minor:("." DecimalIntegerLiteral)? patch:("." DecimalIntegerLiteral)? {
+  = operator:(RelationalOperator / EqualityPragmaOperator / BitwiseXOROperator / Tilde)? __ ("v")? major:DecimalIntegerLiteral minor:("." DecimalIntegerLiteral)? patch:("." DecimalIntegerLiteral)? {
     if (patch === null) {
       patch = 0;
     } else {
@@ -479,7 +487,11 @@ Zs = [\u0020\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]
 /* Tokens */
 
 EmitToken       = "emit"       !IdentifierPart
-ExperimentalToken      = "experimental"      !IdentifierPart
+RevertToken       = "revert"       !IdentifierPart
+AbstractToken   = "abstract"   !IdentifierPart 
+ExperimentalToken   = "experimental"      !IdentifierPart
+OverrideToken  = "override" !IdentifierPart
+AbiCoderToken   = "abicoder"   !IdentifierPart
 ExternalToken   = "external"   !IdentifierPart
 PureToken       = "pure"       !IdentifierPart
 ViewToken       = "view"       !IdentifierPart
@@ -489,9 +501,12 @@ AsToken         = "as"         !IdentifierPart
 BreakToken      = "break"      !IdentifierPart
 CalldataToken   = "calldata"   !IdentifierPart
 ConstantToken   = "constant"   !IdentifierPart
+ImmutableToken   = "immutable"  !IdentifierPart
 ContinueToken   = "continue"   !IdentifierPart
 ContractToken   = "contract"   !IdentifierPart
 ConstructorToken   = "constructor"   !IdentifierPart
+ReceiveToken    = "receive"    !IdentifierPart
+FallbackToken   = "fallback"    !IdentifierPart
 DaysToken       = "days"       !IdentifierPart
 DeleteToken     = "delete"     !IdentifierPart
 DoToken         = "do"         !IdentifierPart
@@ -499,6 +514,7 @@ ElseToken       = "else"       !IdentifierPart
 EnumToken       = "enum"       !IdentifierPart
 EtherToken      = "ether"      !IdentifierPart
 EventToken      = "event"      !IdentifierPart
+ErrorToken      = "error"      !IdentifierPart
 FalseToken      = "false"      !IdentifierPart
 FinneyToken     = "finney"     !IdentifierPart
 ForToken        = "for"        !IdentifierPart
@@ -508,6 +524,8 @@ GetToken        = "get"        !IdentifierPart
 HexToken        = "hex"        !IdentifierPart
 HoursToken      = "hours"      !IdentifierPart
 IfToken         = "if"         !IdentifierPart
+TryToken        = "try"       !IdentifierPart
+CatchToken      = "catch"       !IdentifierPart
 IsToken         = "is"         !IdentifierPart
 IndexedToken    = "indexed"    !IdentifierPart
 ImportToken     = "import"     !IdentifierPart
@@ -717,6 +735,9 @@ Arguments
   / "(" __ "{" __ args:(NameValueList (__ ",")? )? __ "}" __ ")" {
       return optionalList(extractOptional(args, 0));
     }
+  /  "{" __ args:(NameValueList (__ ",")? )? __ "}" {
+    return optionalList(extractOptional(args, 0));
+  }
 
 ArgumentList
   = head:AssignmentExpression tail:(__ "," __ AssignmentExpression)* {
@@ -805,18 +826,57 @@ StorageLocationSpecifier
   / CalldataToken
 
 StateVariableSpecifiers
-  = specifiers:(VisibilitySpecifier __ ConstantToken?){
+ = constant:(ConstantToken/ImmutableToken) __ visibility:(VisibilitySpecifier) __? override:(OverrideToken)? __ {
     return {
-      visibility: specifiers[0][0],
-      isconstant: specifiers[2] ? true: false 
+      visibility: visibility? visibility[0]: null,
+      isconstant: constant ? (constant[0] === "constant" ? true: false) : false,
+      isimmutable: constant? (constant[0] === "immutable" ? true: false) : false,
+      isoverride: override?  true: false
     }
-  }
-  / specifiers:(ConstantToken __ VisibilitySpecifier?){
+   } 
+   /
+  constant:(ConstantToken/ImmutableToken) __? override:(OverrideToken)? __? visibility:(VisibilitySpecifier)? __ {
     return {
-      visibility: specifiers[2] ? specifiers[2][0] : null,
-      isconstant: true
+      visibility: visibility? visibility[0]: null,
+      isconstant: constant ? (constant[0] === "constant" ? true: false) : false,
+      isimmutable: constant? (constant[0] === "immutable" ? true: false) : false,
+      isoverride: override?  true: false
     }
-  }
+   } 
+   /
+   override:(OverrideToken) __ constant:(ConstantToken/ImmutableToken) __? visibility:(VisibilitySpecifier)? __ {
+    return {
+      visibility: visibility? visibility[0]: null,
+      isconstant: constant ? (constant[0] === "constant" ? true: false) : false,
+      isimmutable: constant? (constant[0] === "immutable" ? true: false) : false,
+      isoverride: override?  true: false
+    }
+   } /
+   override:(OverrideToken) __? visibility:(VisibilitySpecifier)? __? constant:(ConstantToken/ImmutableToken)? __ {
+    return {
+      visibility: visibility? visibility[0]: null,
+      isconstant: constant ? (constant[0] === "constant" ? true: false) : false,
+      isimmutable: constant? (constant[0] === "immutable" ? true: false) : false,
+      isoverride: override?  true: false
+    }
+   } /
+   visibility:(VisibilitySpecifier) __ override:(OverrideToken) __? constant:(ConstantToken/ImmutableToken)? __ {
+    return {
+       visibility: visibility? visibility[0]: null,
+      isconstant: constant ? (constant[0] === "constant" ? true: false) : false,
+      isimmutable: constant? (constant[0] === "immutable" ? true: false) : false,
+      isoverride: override?  true: false
+    }
+   }/
+   visibility:(VisibilitySpecifier) __? constant:(ConstantToken/ImmutableToken)? __? override:(OverrideToken)? __ {
+    return {
+      visibility: visibility? visibility[0]: null,
+      isconstant: constant ? (constant[0] === "constant" ? true: false) : false,
+      isimmutable: constant? (constant[0] === "immutable" ? true: false) : false,
+      isoverride: override?  true: false
+    }
+  } 
+
 
 StateVariableValue 
   = "=" __ expression:Expression {
@@ -832,6 +892,8 @@ StateVariableDeclaration
       literal: type,
       visibility: specifiers? specifiers.visibility : null,
       is_constant: specifiers? specifiers.isconstant : false,
+      is_immutable: specifiers? specifiers.isimmutable : false,
+      is_override: specifiers? specifiers.isoverride: false,
       value: value,
       start: location().start.offset,
       end: location().end.offset
@@ -954,6 +1016,9 @@ EqualityExpression
 EqualityOperator
   = "=="
   / "!="
+
+EqualityPragmaOperator
+ = "="
 
 Tilde
   = "~"
@@ -1086,12 +1151,14 @@ Statements
     }
 
 Statement
-  = Block
+  =  
+  Block
   / VariableStatement
   / EmptyStatement
   / ExpressionStatement
   / PlaceholderStatement
   / IfStatement
+  / TryStatement
   / IterationStatement
   / InlineAssemblyStatement
   / ContinueStatement
@@ -1100,6 +1167,59 @@ Statement
   / ThrowStatement
   / UsingStatement
   / EmitStatement
+  / RevertStatement
+  / IncompleteBlock
+ 
+  
+IncompleteBlock
+  = !( 
+  TryStatement
+  / Block 
+  / VariableStatement
+  / EmptyStatement
+  / ExpressionStatement
+  / PlaceholderStatement
+  / IfStatement
+  / CatchStatement
+  / IterationStatement
+  / InlineAssemblyStatement
+  / ContinueStatement
+  / BreakStatement
+  / ReturnStatement
+  / ThrowStatement
+  / UsingStatement
+  / EmitStatement
+  / RevertStatement
+ )  
+
+  __ body:EmitToken __ PrimaryExpression tail:(((".") / (  __ "=" __ ) / ( __ "=" __ NewToken __)) Identifier?)* __ ?
+    {
+      return {
+        type: "IncompleteStatement",
+        body: text(),
+        start: location().start.offset,
+        end: location().end.offset
+      };
+    } /
+    __ body:ReturnToken __ PrimaryExpression tail:(((".") / (  __ "=" __ ) / ( __ "=" __ NewToken __)) Identifier?)* __ ?
+    {
+      return {
+        type: "IncompleteStatement",
+        body:  text(),
+        start: location().start.offset,
+        end: location().end.offset
+      };
+    }  /
+     __ body: PrimaryExpression tail:(((".") / (  __ "=" __ ) / ( __ "=" __ NewToken __)) Identifier?)* __ ?
+    {
+      return {
+        type: "IncompleteStatement",
+        body: text(),
+        start: location().start.offset,
+        end: location().end.offset
+      };
+    } 
+  
 
 Block
   = "{" __ body:(StatementList __)? "}" {
@@ -1109,7 +1229,7 @@ Block
         start: location().start.offset,
         end: location().end.offset
       };
-    }
+    } 
 
 StatementList
   = head:Statement tail:(__ Statement)* { return buildList(head, tail, 1); }
@@ -1175,6 +1295,8 @@ Initialiser
 EmptyStatement
   = ";" { return { type: "EmptyStatement", start: location().start.offset, end: location().end.offset }; }
 
+
+
 ExpressionStatement
   = !("{" / ContractToken / InterfaceToken / LibraryToken / StructToken / EnumToken) expression:Expression EOS {
       return {
@@ -1183,7 +1305,60 @@ ExpressionStatement
         start: location().start.offset,
         end: location().end.offset
       };
+    } 
+
+TryStatement 
+  = TryToken __ tryExpression: Expression tail:(((".") / (  __ "=" __ ) / ( __ "=" __ NewToken __)) Identifier?)* __ 
+    tryStatement:Statement __
+    catchStatements: (CatchStatements)*
+    {
+      return {
+         type:  "TryStatement",
+         tryExpression: tryExpression,
+         tryStatement: tryStatement,
+         catchStatements: catchStatements
+      };
+    } 
+    / TryToken __ tryExpression:Expression tail:(((".") / (  __ "=" __ ) / ( __ "=" __ NewToken __)) Identifier?)* __ tryExpressionReturns:ReturnsDeclarations __ tryStatement: Statement __
+      catchStatements:(CatchStatements)*
+    {
+        return {
+         type:  "TryStatement",
+         tryExpressionReturns: tryExpressionReturns,
+         tryExpression: tryExpression,
+         tryStatement: tryStatement,
+         catchStatements: catchStatements
+      };
+    } 
+    
+
+CatchStatements
+  = head:CatchStatement tail:(__ CatchStatement)* {
+      return buildList(head, tail, 1);
     }
+
+CatchStatement
+  = CatchToken __ "(" __ param:InformalParameterList __ ")" __ body:Block {
+      return {
+        type: "CatchClause",
+        param: param,
+        body: body
+      };
+    } /
+    CatchToken __ body:Block {
+      return {
+        type: "CatchClause",
+        body: body
+      };
+    } /
+ CatchToken __ "Error" __ "(" __ param:InformalParameterList __ ")" __ body:Block {
+      return {
+        type: "CatchClause",
+        param: param,
+        body: body
+      };
+    }
+    
 
 IfStatement
   = IfToken __ "(" __ test:Expression __ ")" __
@@ -1226,6 +1401,14 @@ PragmaStatement
     return {
       type: "ExperimentalPragmaStatement",
       feature: featureName,
+      start: location().start.offset,
+      end: location().end.offset
+    }
+  }
+   / PragmaToken __ AbiCoderToken __ version:(Identifier / StringLiteral) EOS {
+    return {
+      type: "AbiCoderPragmaStatement",
+      version: version,
       start: location().start.offset,
       end: location().end.offset
     }
@@ -1291,6 +1474,17 @@ EmitStatement
   {
     return {
       type: "EmitStatement",
+      expression: callexpr,
+      start: location().start.offset,
+      end: location().end.offset
+    };
+  }
+
+RevertStatement
+  = RevertToken __ callexpr:CallExpression EOS
+  {
+    return {
+      type: "RevertStatement",
       expression: callexpr,
       start: location().start.offset,
       end: location().end.offset
@@ -1425,7 +1619,7 @@ ThrowStatement
     }
 
 ContractStatement
-  = ContractToken __ id:Identifier __ is:IsStatement? __
+  = abstract:AbstractToken? __ ContractToken __ id:Identifier __ is:IsStatement? __
     "{" __ body:SourceElements? __ "}"
   {
     return {
@@ -1433,19 +1627,20 @@ ContractStatement
       name: id.name,
       is: is != null ? is.names : [],
       body: optionalList (body),
+      is_abstract: abstract != null,
       start: location().start.offset,
       end: location().end.offset
     }
   }
 
 InterfaceStatement
-  = InterfaceToken __ id:Identifier __
+  = InterfaceToken __ id:Identifier __ is:IsStatement? __
     "{" __ body:SourceElements? __ "}"
   {
     return {
       type: "InterfaceStatement",
       name: id.name,
-      is: [],
+      is: is != null ? is.names : [],
       body: optionalList (body),
       start: location().start.offset,
       end: location().end.offset
@@ -1479,6 +1674,20 @@ IsStatement
   }
 
 /* ----- A.5 Functions and Programs ----- */
+
+ErrorDeclaration
+  = ErrorToken __ fnname:FunctionName __ isanonymous:AnonymousToken? __ EOS
+  {
+    return {
+      type: "ErrorDeclaration",
+      name: fnname.name,
+      params: fnname.params,
+      is_anonymous: isanonymous != null,
+      start: location().start.offset,
+      end: location().end.offset
+    }
+  }
+
 
 EventDeclaration
   = EventToken __ fnname:FunctionName __ isanonymous:AnonymousToken? __ EOS
@@ -1549,6 +1758,31 @@ ConstructorDeclaration
         end: location().end.offset
       };
     }
+
+FallbackDeclaration
+  = FallbackToken __ fnname:FunctionName __ args:ModifierArgumentList? __ body:FunctionBody
+    {
+      return {
+        type: "FallbackDeclaration",
+        modifiers: args,
+        body: body,
+        start: location().start.offset,
+        end: location().end.offset
+      };
+    }
+
+ReceiveDeclaration
+  = ReceiveToken __ fnname:FunctionName __ args:ModifierArgumentList? __ body:FunctionBody
+    {
+      return {
+        type: "ReceiveDeclaration",
+        modifiers: args,
+        body: body,
+        start: location().start.offset,
+        end: location().end.offset
+      };
+    }
+
 
 ReturnsDeclaration
   = ReturnsToken __ params:("(" __ InformalParameterList __ ")")
@@ -1740,6 +1974,8 @@ SourceUnit
   / ContractStatement
   / InterfaceStatement
   / LibraryStatement
+  / StructDeclaration
+  / ErrorDeclaration
 
 SourceElements
   = head:SourceElement tail:(__ SourceElement)* {
@@ -1751,9 +1987,12 @@ SourceElement
   / EnumDeclaration
   / EventDeclaration
   / StructDeclaration
+  / ErrorDeclaration
   / ModifierDeclaration
   / FunctionDeclaration
   / ConstructorDeclaration
+  / FallbackDeclaration
+  / ReceiveDeclaration
   / UsingStatement
 
 InlineAssemblyBlock
