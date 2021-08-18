@@ -7,7 +7,6 @@
     "pegis-solidity": "./cli.js"
   },
   "directories": {
-    "doc": "docs",
     "lib": "lib",
     "test": "test"
   },
@@ -28,10 +27,11 @@
     "prettier": "^2.3.2"
   },
   "scripts": {
-    "build": "mkdirp ./build && ./node_modules/pegjs/bin/pegjs -o ./build/parser.js ./lib/solidity.pegjs && pegjs -o ./build/imports_parser.js ./lib/imports.pegjs",
-    "lint": "eslint .",
+    "build": "sh entrypoint.sh",
+    "ci": "rm -rf build/ && sh entrypoint.sh && npx nyc --reporter=lcov npm test && npx codecov",
+    "lint": "npx eslint .",
     "run": "npm run build",
-    "test": "mocha --timeout 5000 --reporter spec"
+    "test": "npx mocha --timeout 5000 --reporter spec"
   },
   "repository": {
     "type": "git",
