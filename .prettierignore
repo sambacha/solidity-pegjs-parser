@@ -1,0 +1,13 @@
+*.pegjs
+*.min.js
+build/
+dist/
+output/
+*.test.js
+*.html
+*.css
+.nyc/
+codecov/
+.coverage/
+*.xml
+*.xhtml
