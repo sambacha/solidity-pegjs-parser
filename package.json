@@ -12,20 +12,21 @@
     "test": "test"
   },
   "dependencies": {
-    "mkdirp": "^1.0.4",
     "peggy": "^1.2.0",
-    "pegjs": "^0.10.0",
     "ts-pegjs": "^1.1.1",
     "yargs": "^16.1.0"
   },
   "devDependencies": {
     "chai": "^4.3.4",
+    "codecov": "^3.8.3",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.0",
     "mocha": "^9.0.3",
-    "prettier": "^2.3.2"
+    "nyc": "^15.1.0",
+    "prettier": "^2.3.2",
+    "webpack": "^5.50.0"
   },
   "scripts": {
     "build": "mkdirp ./build && ./node_modules/pegjs/bin/pegjs -o ./build/parser.js ./lib/solidity.pegjs && pegjs -o ./build/imports_parser.js ./lib/imports.pegjs",
