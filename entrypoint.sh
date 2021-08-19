@@ -9,6 +9,7 @@ if [ -d "$DIR" ]; then
   echo "Parser SOURCE_COMMIT"
   echo "SOURCE_COMMIT: $SOURCE_COMMIT"
   sleep 1
+  rm -rf build/
   npx peggy --cache -o ./build/parser.js ./solidity.pegjs
   npx peggy -o ./build/imports_parser.js ./imports.pegjs
   echo "Geneated parser successfully"

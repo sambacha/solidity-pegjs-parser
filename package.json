@@ -27,8 +27,9 @@
     "prettier": "^2.3.2"
   },
   "scripts": {
-    "build": "sh entrypoint.sh",
-    "ci": "rm -rf build/ && sh entrypoint.sh && npx nyc --reporter=lcov npm test && npx codecov",
+    "build": "npx peggy --cache -o ./build/parser.js ./solidity.pegjs",
+    "compile": " npx peggy -o ./build/imports_parser.js ./imports.pegjs",
+    "ci": "./entrypoint.sh && npx nyc --reporter=lcov npm test && npx codecov",
     "lint": "npx eslint .",
     "run": "npm run build",
     "test": "npx mocha --timeout 5000 --reporter spec"
