@@ -28,10 +28,11 @@
   },
   "scripts": {
     "build": "npx peggy --cache -o ./build/parser.js ./solidity.pegjs",
-    "compile": " npx peggy -o ./build/imports_parser.js ./imports.pegjs",
+    "compile": "npx peggy -o ./build/imports_parser.js ./imports.pegjs",
     "ci": "./entrypoint.sh && npx nyc --reporter=lcov npm test && npx codecov",
+    "tracer": "./node_modules/.bin/peggy --trace --output  parser-trace.js solidity.pegjs",
     "lint": "npx eslint .",
-    "run": "npm run build",
+    "run": "npm run build && npm run compile",
     "test": "npx mocha --timeout 5000 --reporter spec"
   },
   "repository": {
