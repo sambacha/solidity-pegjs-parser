@@ -1,6 +1,6 @@
 {
   "name": "pegis-solidity",
-  "version": "1.0.1",
+  "version": "2.1.0",
   "description": "pegjs grammar for solidity parsing",
   "main": "index.js",
   "bin": {
@@ -33,6 +33,7 @@
     "tracer": "./node_modules/.bin/peggy --trace --output  parser-trace.js solidity.pegjs",
     "lint": "npx eslint .",
     "run": "npm run build && npm run compile",
+    "format": "npx prettier --config .prettierrc.json --write .",
     "test": "npx mocha --timeout 5000 --reporter spec"
   },
   "repository": {
