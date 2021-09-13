@@ -4,7 +4,7 @@
   "description": "pegjs grammar for solidity parsing",
   "main": "index.js",
   "bin": {
-    "pegis-solidity": "./cli.js"
+    "pegjs-solidity": "./cli.js"
   },
   "directories": {
     "lib": "lib",
@@ -51,7 +51,7 @@
     "coverage"
   ],
   "author": "SEE CONTRIBUTORS",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/sambacha/solidity-pegjs-parser/issues"
   },
