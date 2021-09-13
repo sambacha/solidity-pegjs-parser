@@ -1,10 +1,10 @@
 {
-  "name": "pegis-solidity",
-  "version": "2.1.0",
+  "name": "pegjs-solidity",
+  "version": "1.0.2",
   "description": "pegjs grammar for solidity parsing",
   "main": "index.js",
   "bin": {
-    "pegis-solidity": "./cli.js"
+    "pegjs-solidity": "./cli.js"
   },
   "directories": {
     "lib": "lib",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "peggy": "^1.2.0",
+    "solc": "^0.6.12",
     "ts-pegjs": "^1.1.1",
     "yargs": "^16.1.0"
   },
@@ -33,7 +34,6 @@
     "tracer": "./node_modules/.bin/peggy --trace --output  parser-trace.js solidity.pegjs",
     "lint": "npx eslint .",
     "run": "npm run build && npm run compile",
-    "format": "npx prettier --config .prettierrc.json --write .",
     "test": "npx mocha --timeout 5000 --reporter spec"
   },
   "repository": {
@@ -51,7 +51,7 @@
     "coverage"
   ],
   "author": "SEE CONTRIBUTORS",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/sambacha/solidity-pegjs-parser/issues"
   },
