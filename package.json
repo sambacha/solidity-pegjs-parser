@@ -1,5 +1,5 @@
 {
-  "name": "pegis-solidity",
+  "name": "pegjs-solidity",
   "version": "1.0.1",
   "description": "pegjs grammar for solidity parsing",
   "main": "index.js",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "peggy": "^1.2.0",
+    "solc": "^0.6.12",
     "ts-pegjs": "^1.1.1",
     "yargs": "^16.1.0"
   },
