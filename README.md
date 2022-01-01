@@ -20,15 +20,17 @@ pegis-solidity
 > [consensys/solidity-parser](https://github.com/ConsenSys/solidity-parser) with
 > additional project specific grammar rules
 
-- Main change is adoption of `peggy` as the `peg.js` framework has been stagnant, this is a drop in replacement.
+- Main change is adoption of `peggy` as the `peg.js` framework has been
+  stagnant, this is a drop in replacement.
 
 #### TODO
+
 - Typescript support in next release via `ts-peggy`
 - Documentation update
 
 ## Reference for Changes
 
->  v2 changes start here: 18 August 2021
+> v2 changes start here: 18 August 2021
 
 - feat(refactor): migrate to peggy and various improvements
   [`87b594a`](https://github.com/sambacha/solidity-pegjs-parser/commit/87b594ad21e1221b5e3574ac8f69b5751a9ce4be)
@@ -36,7 +38,6 @@ pegis-solidity
   [`0de7a77`](https://github.com/sambacha/solidity-pegjs-parser/commit/0de7a774bf2edd51b03a865e435b30a02feb5313)
 - chore(repo): remove dead and legacy artifacts
   [`012fec1`](https://github.com/sambacha/solidity-pegjs-parser/commit/012fec1b5000017a6125c38580d76a3299f597cc)
-
 
 ### Usage
 

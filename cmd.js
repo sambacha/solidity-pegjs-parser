@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-"use strict";
+'use strict';
 
-(function() {
+(function () {
   var SolidityParser, echo, file, fs, i, len, ref, src;
 
   fs = require('fs');
 
-  SolidityParser = require("./index.js");
+  SolidityParser = require('./index.js');
 
-  echo = function(msg) {
+  echo = function (msg) {
     return process.stdout.write(JSON.stringify(msg, null, 2) + '\n');
   };
 
@@ -22,14 +22,13 @@
         echo(SolidityParser.parse(src));
       } catch (err) {
         process.stderr.write(
-          err.name === 'SyntaxError' 
-            ? "Location: " + JSON.stringify(err.location, null, 4) + "\n" + err
-            : err.name + ': ' + err.message
+          err.name === 'SyntaxError'
+            ? 'Location: ' + JSON.stringify(err.location, null, 4) + '\n' + err
+            : err.name + ': ' + err.message,
         );
       }
     }
   } else {
-    echo("Solidity Parser: file...");
+    echo('Solidity Parser: file...');
   }
-
-}).call(this);
+}.call(this));
