@@ -41,7 +41,7 @@
     "url": "git+https://github.com/sambacha/solidity-pegjs-parser.git"
   },
   "keywords": [
-    "soliditty",
+    "solidity",
     "pegjs",
     "parser",
     "ethereum",
