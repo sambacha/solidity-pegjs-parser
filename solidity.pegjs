@@ -269,6 +269,7 @@ NumericLiteral "number"
 
 Denomination
   = token:(WeiToken
+  / GweiToken
   / SzaboToken
   / FinneyToken
   / EtherToken
@@ -487,10 +488,10 @@ Zs = [\u0020\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]
 /* Tokens */
 
 EmitToken       = "emit"       !IdentifierPart
-RevertToken       = "revert"       !IdentifierPart
+RevertToken     = "revert"     !IdentifierPart
 AbstractToken   = "abstract"   !IdentifierPart 
-ExperimentalToken   = "experimental"      !IdentifierPart
-OverrideToken  = "override" !IdentifierPart
+ExperimentalToken="experimental"!IdentifierPart
+OverrideToken   = "override"   !IdentifierPart
 AbiCoderToken   = "abicoder"   !IdentifierPart
 ExternalToken   = "external"   !IdentifierPart
 PureToken       = "pure"       !IdentifierPart
@@ -501,18 +502,19 @@ AsToken         = "as"         !IdentifierPart
 BreakToken      = "break"      !IdentifierPart
 CalldataToken   = "calldata"   !IdentifierPart
 ConstantToken   = "constant"   !IdentifierPart
-ImmutableToken   = "immutable"  !IdentifierPart
+ImmutableToken  = "immutable"  !IdentifierPart
 ContinueToken   = "continue"   !IdentifierPart
 ContractToken   = "contract"   !IdentifierPart
-ConstructorToken   = "constructor"   !IdentifierPart
+ConstructorToken= "constructor"!IdentifierPart
 ReceiveToken    = "receive"    !IdentifierPart
-FallbackToken   = "fallback"    !IdentifierPart
+FallbackToken   = "fallback"   !IdentifierPart
 DaysToken       = "days"       !IdentifierPart
 DeleteToken     = "delete"     !IdentifierPart
 DoToken         = "do"         !IdentifierPart
 ElseToken       = "else"       !IdentifierPart
 EnumToken       = "enum"       !IdentifierPart
 EtherToken      = "ether"      !IdentifierPart
+GweiToken       = "gwei"       !IdentifierPart
 EventToken      = "event"      !IdentifierPart
 ErrorToken      = "error"      !IdentifierPart
 FalseToken      = "false"      !IdentifierPart
@@ -524,8 +526,8 @@ GetToken        = "get"        !IdentifierPart
 HexToken        = "hex"        !IdentifierPart
 HoursToken      = "hours"      !IdentifierPart
 IfToken         = "if"         !IdentifierPart
-TryToken        = "try"       !IdentifierPart
-CatchToken      = "catch"       !IdentifierPart
+TryToken        = "try"        !IdentifierPart
+CatchToken      = "catch"      !IdentifierPart
 IsToken         = "is"         !IdentifierPart
 IndexedToken    = "indexed"    !IdentifierPart
 ImportToken     = "import"     !IdentifierPart
@@ -1330,6 +1332,17 @@ TryStatement
          catchStatements: catchStatements
       };
     } 
+    / TryToken __ tryExpression:Expression tail:(((".") / (  __ "=" __ ) / ( __ "=" __ NewToken __)) Identifier?)* __ tryExpressionReturns:ReturnsDeclarations __ tryStatement: __
+      catchStatements:(CatchStatements)*
+    {
+        return {
+         type:  "TryStatement",
+         tryExpressionReturns: tryExpressionReturns,
+         tryExpression: tryExpression,
+         tryStatement: tryStatement,
+         catchStatements: catchStatements
+      };
+    } 
     
 
 CatchStatements
@@ -1975,6 +1988,7 @@ SourceUnit
   / InterfaceStatement
   / LibraryStatement
   / StructDeclaration
+  / EnumDeclaration
   / ErrorDeclaration
 
 SourceElements
