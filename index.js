@@ -4,6 +4,10 @@ const PEG = require('peggy');
 const fs = require('fs');
 const path = require('path');
 
+import { generate } from 'peggy';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
 const builtParsers = {
   solidity: require('./build/parser'),
   imports: require('./build/imports_parser'),
@@ -33,18 +37,17 @@ function parseComments(sourceCode) {
 
 // TODO: Make all this async.
 module.exports = {
-  getParser: function (parser_name, rebuild) {
+  getParser(parser_name, rebuild) {
     if (rebuild == true) {
-      let parserfile = fs.readFileSync(
-        path.resolve('./' + parser_name + '.pegjs'),
-        { encoding: 'utf8' },
-      );
+      let parserfile = fs.readFileSync(path.resolve(`./${parser_name}.pegjs`), {
+        encoding: 'utf8',
+      });
       return PEG.generate(parserfile);
     } else {
       return builtParsers[parser_name];
     }
   },
-  parse: function (source, options, parser_name, rebuild) {
+  parse(source, options, parser_name, rebuild) {
     if (typeof parser_name == 'boolean') {
       rebuild = parser_name;
       parser_name = null;
@@ -76,7 +79,7 @@ module.exports = {
 
     return result;
   },
-  parseFile: function (file, parser_name, rebuild) {
+  parseFile(file, parser_name, rebuild) {
     return this.parse(
       fs.readFileSync(path.resolve(file), { encoding: 'utf8' }),
       parser_name,
