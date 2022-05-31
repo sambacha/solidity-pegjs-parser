@@ -2139,6 +2139,11 @@ peggy@2.0.0:
     commander "^9.2.0"
     source-map-generator "0.8.0"
 
+pegjs-backtrace@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/pegjs-backtrace/-/pegjs-backtrace-0.2.1.tgz#1e09c1fafff37877f92aae5433a7026e03385932"
+  integrity sha512-rnVQiHyTE1wZG14Vl3Xk33ecrF7ZJ7ZW7jSgSlw4LdzBuhbyGVQ+oVApQ6tRi4QsII/xHgByHb6Ax68K6SPLhw==
+
 picocolors@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
