@@ -1,6 +1,7 @@
 {
   "name": "pegjs-solidity",
   "version": "1.2.0",
+ "type": "module",
   "description": "pegjs grammar for solidity parsing with esm/commonjs and browser umd support",
   "main": "index.js",
   "files": [
