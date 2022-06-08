@@ -23,10 +23,25 @@ pegis-solidity
 - Main change is adoption of `peggy` as the `peg.js` framework has been
   stagnant, this is a drop in replacement.
 
-#### TODO
+## Latest Changelog
 
-- Typescript support in next release via `ts-peggy`
-- Documentation update
+- Added support for `gwei` units.
+    ```solidity
+    uint256 gas = 10 gwei;
+    ```
+- Fixed a bug that didn't recognize empty TryCatch statements with a return expresion.
+    ```solidity
+    try Foo.bar() returns (uint result) {} catch {}
+    ```
+- Fixed a bug that didn't recognize Enum declarations
+    ```solidity
+    enum Foo {
+        bar
+    }
+    ```
+
+Thanks to [https://github.com/wrong7](https://github.com/wrong7)
+
 
 ## Reference for Changes
 
@@ -38,6 +53,7 @@ pegis-solidity
   [`0de7a77`](https://github.com/sambacha/solidity-pegjs-parser/commit/0de7a774bf2edd51b03a865e435b30a02feb5313)
 - chore(repo): remove dead and legacy artifacts
   [`012fec1`](https://github.com/sambacha/solidity-pegjs-parser/commit/012fec1b5000017a6125c38580d76a3299f597cc)
+
 
 ### Usage
 
