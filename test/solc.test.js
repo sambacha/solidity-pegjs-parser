@@ -1,5 +1,5 @@
 
-var solc = require('solc');
+const solc = require('solc');
 
 var input = {
     language: 'Solidity',

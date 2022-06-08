@@ -1,0 +1,10 @@
+opt/
+.github/
+.git/
+test/
+test_files/
+docs/
+*.yml
+entrypoint.sh
+scripts/
+

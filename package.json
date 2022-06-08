@@ -1,38 +1,52 @@
 {
   "name": "pegjs-solidity",
-  "version": "1.0.2",
-  "description": "pegjs grammar for solidity parsing",
+  "version": "1.1.0",
+  "description": "pegjs grammar for solidity parsing with esm/commonjs and browser umd support",
   "main": "index.js",
+  "files": [
+    "lib/**",
+    "dist/**"
+  ],
   "bin": {
     "pegjs-solidity": "./cli.js"
   },
   "directories": {
     "lib": "lib",
-    "test": "test"
+    "src": "src"
   },
   "dependencies": {
-    "peggy": "^1.2.0",
-    "solc": "^0.6.12",
-    "ts-pegjs": "^1.1.1",
+    "peggy": "2.0.0",
+    "pegjs-backtrace": "^0.2.1",
+    "solc": "^0.6.12 | ^0.7.0 | ^0.8.0",
     "yargs": "^16.1.0"
   },
+  "resolutions": {
+    "peggy": "2.0.0"
+  },
   "devDependencies": {
+    "@types/node": "^16",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
     "chai": "^4.3.4",
     "codecov": "^3.8.3",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.0",
     "mocha": "^9.0.3",
     "nyc": "^15.1.0",
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "shx": "^0.3.4",
+    "ts-pegjs": "1.2.2",
+    "tslib": "^2.4.0",
+    "typescript": "4.6.4"
   },
   "scripts": {
-    "build": "npx peggy --cache -o ./build/parser.js ./solidity.pegjs",
-    "compile": "npx peggy -o ./build/imports_parser.js ./imports.pegjs",
-    "ci": "./entrypoint.sh && npx nyc --reporter=lcov npm test && npx codecov",
+    "build": "npx peggy --cache -o ./src/parser.js ./solidity.pegjs",
+    "compile": "npx peggy -o ./src/imports_parser.js ./imports.pegjs",
+    "ci": "shx ./build.sh && npx nyc --reporter=lcov npm test && npx codecov",
     "tracer": "./node_modules/.bin/peggy --trace --output  parser-trace.js solidity.pegjs",
-    "lint": "npx eslint .",
+    "lint": "npx eslint . --fix",
     "run": "npm run build && npm run compile",
     "test": "npx mocha --timeout 5000 --reporter spec"
   },
@@ -41,7 +55,7 @@
     "url": "git+https://github.com/sambacha/solidity-pegjs-parser.git"
   },
   "keywords": [
-    "soliditty",
+    "solidity",
     "pegjs",
     "parser",
     "ethereum",

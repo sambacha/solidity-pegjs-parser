@@ -1,12 +1,10 @@
-
 name: nodejs
 
 on:
   push:
     paths:
-    - '**/**'
-    - '!**/docs/**' 
-    
+      - '**/**'
+      - '!**/docs/**'
 
 env:
   CI: true

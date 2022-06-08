@@ -20,15 +20,32 @@ pegis-solidity
 > [consensys/solidity-parser](https://github.com/ConsenSys/solidity-parser) with
 > additional project specific grammar rules
 
-- Main change is adoption of `peggy` as the `peg.js` framework has been stagnant, this is a drop in replacement.
+- Main change is adoption of `peggy` as the `peg.js` framework has been
+  stagnant, this is a drop in replacement.
 
-#### TODO
-- Typescript support in next release via `ts-peggy`
-- Documentation update
+## Latest Changelog
+
+- Added support for `gwei` units.
+    ```solidity
+    uint256 gas = 10 gwei;
+    ```
+- Fixed a bug that didn't recognize empty TryCatch statements with a return expresion.
+    ```solidity
+    try Foo.bar() returns (uint result) {} catch {}
+    ```
+- Fixed a bug that didn't recognize Enum declarations
+    ```solidity
+    enum Foo {
+        bar
+    }
+    ```
+
+Thanks to [https://github.com/wrong7](https://github.com/wrong7)
+
 
 ## Reference for Changes
 
->  v2 changes start here: 18 August 2021
+> v2 changes start here: 18 August 2021
 
 - feat(refactor): migrate to peggy and various improvements
   [`87b594a`](https://github.com/sambacha/solidity-pegjs-parser/commit/87b594ad21e1221b5e3574ac8f69b5751a9ce4be)
